@@ -1,15 +1,18 @@
 from rest_framework import serializers
 from .models import Address, Store, OpeningHours
 
+
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = '__all__'
+        fields = ['id', 'street', 'houseNumber', 'location', 'postcode']
+
 
 class OpeningHoursSerializer(serializers.ModelSerializer):
     class Meta:
         model = OpeningHours
-        fields = '__all__'
+        fields = ['id', 'dayOfWeek', 'openingTime', 'closingTime', 'isClosed', 'isSpecialTime']
+
 
 class StoreSerializer(serializers.ModelSerializer):
     address = AddressSerializer(many=True, read_only=True)

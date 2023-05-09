@@ -26,28 +26,37 @@ from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 schema_view = get_schema_view(
-   openapi.Info(
-      title="Store API",
-      default_version='v1',
-      description="Store API for the test Task"
-   ),
-   public=True,
-   permission_classes=[permissions.AllowAny],
+    openapi.Info(
+        title="Store API",
+        default_version='v1',
+        description="Store API for the test Task"
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
 )
 
 urlpatterns = [
-    path('swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    path('redoc.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('admin/', admin.site.urls),
-    path('addresses/', AddressListCreateView.as_view(), name='address-list-create'),
-    path('addresses/<int:pk>/', AddressRetrieveUpdateDestroyView.as_view(), name='address-retrieve-update-destroy'),
-    path('stores/', StoreListCreateView.as_view(), name='store-list-create'),
-    path('stores/<int:pk>/', StoreRetrieveUpdateDestroyView.as_view(), name='store-retrieve-update-destroy'),
-    path('opening-hours/', OpeningHoursListCreateView.as_view(), name='opening-hours-list-create'),
-    path('opening-hours/<int:pk>/', OpeningHoursRetrieveUpdateDestroyView.as_view(), name='opening-hours-retrieve-update-destroy'),
-    path('api-token-auth/', obtain_auth_token, name='api_token_auth')
+    path('swagger.json', schema_view.without_ui(cache_timeout=0), 
+         name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger',cache_timeout=0), 
+         name='schema-swagger-ui'),
+    path('redoc/', schema_view.with_ui('redoc',cache_timeout=0), 
+         name='schema-redoc'),
+    path('redoc.json', schema_view.without_ui(cache_timeout=0), 
+         name='schema-json'),    
+    path('addresses/', AddressListCreateView.as_view(),
+         name='address-list-create'),
+    path('addresses/<int:pk>/', AddressRetrieveUpdateDestroyView.as_view(),
+         name='address-retrieve-update-destroy'),
+    path('stores/', StoreListCreateView.as_view(), 
+         name='store-list-create'),
+    path('stores/<int:pk>/', StoreRetrieveUpdateDestroyView.as_view(),
+         name='store-retrieve-update-destroy'),
+    path('opening-hours/', OpeningHoursListCreateView.as_view(),
+         name='opening-hours-list-create'),
+    path('opening-hours/<int:pk>/', OpeningHoursRetrieveUpdateDestroyView.as_view(),
+         name='opening-hours-retrieve-update-destroy'),
+    path('api-token-auth/', obtain_auth_token, 
+         name='api_token_auth')
 ]
-
-#

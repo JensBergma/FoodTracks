@@ -9,13 +9,16 @@ from rest_framework.authtoken.models import Token
 from .models import Address, Store, OpeningHours
 from .serializer import AddressSerializer, StoreSerializer, OpeningHoursSerializer
 
+
 class AddressListCreateViewTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create_user(username='tester', email='test@test.com', password='top_secret')
+        self.user = User.objects.create_user(
+            username='tester', email='test@test.com', password='top_secret')
         self.token = Token.objects.create(user=self.user)
         self.token.save()
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
 
         self.address_data = {
             'street': 'Test Street',
@@ -42,15 +45,19 @@ class AddressListCreateViewTestCase(TestCase):
         self.assertEqual(response.data['results'], serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+
 class AddressRetrieveUpdateDestroyViewTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create_user(username='tester', email='test@test.com', password='top_secret')
+        self.user = User.objects.create_user(
+            username='tester', email='test@test.com', password='top_secret')
         self.token = Token.objects.create(user=self.user)
         self.token.save()
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
 
-        self.address = Address.objects.create(street='Test Street', houseNumber='123', location='Test City', postcode='12345')
+        self.address = Address.objects.create(
+            street='Test Street', houseNumber='123', location='Test City', postcode='12345')
         self.address_data = {
             'street': 'Updated Test Street',
             'houseNumber': '123',
@@ -58,7 +65,8 @@ class AddressRetrieveUpdateDestroyViewTestCase(TestCase):
             'postcode': '12345'
         }
         self.response = self.client.put(
-            reverse('address-retrieve-update-destroy', kwargs={'pk': self.address.pk}),
+            reverse('address-retrieve-update-destroy',
+                    kwargs={'pk': self.address.pk}),
             data=self.address_data,
             format='json'
         )
@@ -70,24 +78,29 @@ class AddressRetrieveUpdateDestroyViewTestCase(TestCase):
     def test_update_address_invalid_houseNumber(self):
         self.address_data['houseNumber'] = '55555555555555555'
         response = self.client.put(
-            reverse('address-retrieve-update-destroy', kwargs={'pk': self.address.pk}),
+            reverse('address-retrieve-update-destroy',
+                    kwargs={'pk': self.address.pk}),
             data=self.address_data,
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_delete_address(self):
-        response = self.client.delete(reverse('address-retrieve-update-destroy', kwargs={'pk': self.address.pk}))
+        response = self.client.delete(
+            reverse('address-retrieve-update-destroy', kwargs={'pk': self.address.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Address.objects.count(), 0)
+
 
 class OpeningHoursListCreateViewTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create_user(username='tester', email='test@test.com', password='top_secret')
+        self.user = User.objects.create_user(
+            username='tester', email='test@test.com', password='top_secret')
         self.token = Token.objects.create(user=self.user)
         self.token.save()
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
         self.url = reverse('opening-hours-list-create')
 
     def test_create_opening_hours(self):
@@ -114,12 +127,16 @@ class OpeningHoursListCreateViewTestCase(TestCase):
 class OpeningHoursRetrieveUpdateDestroyViewTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create_user(username='tester', email='test@test.com', password='top_secret')
+        self.user = User.objects.create_user(
+            username='tester', email='test@test.com', password='top_secret')
         self.token = Token.objects.create(user=self.user)
         self.token.save()
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
-        self.opening_hours = OpeningHours.objects.create(dayOfWeek=1, openingTime='08:00', closingTime='17:00', isClosed=False, isSpecialTime=False)
-        self.url = reverse('opening-hours-retrieve-update-destroy', kwargs={'pk': self.opening_hours.pk})
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
+        self.opening_hours = OpeningHours.objects.create(
+            dayOfWeek=1, openingTime='08:00', closingTime='17:00', isClosed=False, isSpecialTime=False)
+        self.url = reverse('opening-hours-retrieve-update-destroy',
+                           kwargs={'pk': self.opening_hours.pk})
 
     def test_retrieve_opening_hours(self):
         response = self.client.get(self.url, format='json')
@@ -127,13 +144,15 @@ class OpeningHoursRetrieveUpdateDestroyViewTestCase(TestCase):
         self.assertEqual(response.data['dayOfWeek'], 1)
 
     def test_update_opening_hours(self):
-        data = {'dayOfWeek': 2, 'openingTime': '09:00', 'closingTime': '18:00', 'isClosed': False, 'isSpecialTime': False}
+        data = {'dayOfWeek': 2, 'openingTime': '09:00',
+                'closingTime': '18:00', 'isClosed': False, 'isSpecialTime': False}
         response = self.client.put(self.url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['dayOfWeek'], 2)
 
     def test_update_opening_hours_invalid_daysOfWeek(self):
-        data = {'dayOfWeek': 10, 'openingTime': '09:00', 'closingTime': '18:00', 'isClosed': False, 'isSpecialTime': False}
+        data = {'dayOfWeek': 10, 'openingTime': '09:00',
+                'closingTime': '18:00', 'isClosed': False, 'isSpecialTime': False}
         response = self.client.put(self.url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -142,13 +161,16 @@ class OpeningHoursRetrieveUpdateDestroyViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(OpeningHours.objects.count(), 0)
 
+
 class StoreListCreateViewTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create_user(username='tester', email='test@test.com', password='top_secret')
+        self.user = User.objects.create_user(
+            username='tester', email='test@test.com', password='top_secret')
         self.token = Token.objects.create(user=self.user)
         self.token.save()
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
 
         self.store_data = {
             'name': 'Test Store',
@@ -204,14 +226,18 @@ class StoreListCreateViewTestCase(TestCase):
 class StoreRetrieveUpdateDestroyViewTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = User.objects.create_user(username='tester', email='test@test.com', password='top_secret')
+        self.user = User.objects.create_user(
+            username='tester', email='test@test.com', password='top_secret')
         self.token = Token.objects.create(user=self.user)
         self.token.save()
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
 
         self.store = Store.objects.create(name='Test Store')
-        self.address = Address.objects.create(street='Test Street', houseNumber='123', location='Test City', postcode='12345')
-        self.opening_hours = OpeningHours.objects.create(dayOfWeek=1, openingTime='08:00', closingTime='17:00', isClosed=False, isSpecialTime=False)
+        self.address = Address.objects.create(
+            street='Test Street', houseNumber='123', location='Test City', postcode='12345')
+        self.opening_hours = OpeningHours.objects.create(
+            dayOfWeek=1, openingTime='08:00', closingTime='17:00', isClosed=False, isSpecialTime=False)
         self.store.address.add(self.address)
         self.store.openingHours.add(self.opening_hours)
         self.store_data = {
@@ -231,7 +257,8 @@ class StoreRetrieveUpdateDestroyViewTestCase(TestCase):
             }]
         }
         self.response = self.client.put(
-            reverse('store-retrieve-update-destroy', kwargs={'pk': self.store.pk}),
+            reverse('store-retrieve-update-destroy',
+                    kwargs={'pk': self.store.pk}),
             data=self.store_data,
             format='json'
         )
@@ -251,7 +278,8 @@ class StoreRetrieveUpdateDestroyViewTestCase(TestCase):
             'isSpecialTime': False
         }]
         response = self.client.put(
-            reverse('store-retrieve-update-destroy', kwargs={'pk': self.store.pk}),
+            reverse('store-retrieve-update-destroy',
+                    kwargs={'pk': self.store.pk}),
             data=self.store_data,
             format='json'
         )
@@ -260,7 +288,8 @@ class StoreRetrieveUpdateDestroyViewTestCase(TestCase):
     def test_update_store_invalid_opening_hours(self):
         self.store_data['openingHours'][0]['openingTime'] = '50:00'
         response = self.client.put(
-            reverse('store-retrieve-update-destroy', kwargs={'pk': self.store.pk}),
+            reverse('store-retrieve-update-destroy',
+                    kwargs={'pk': self.store.pk}),
             data=self.store_data,
             format='json'
         )
@@ -269,18 +298,22 @@ class StoreRetrieveUpdateDestroyViewTestCase(TestCase):
     def test_update_store_missing_fields(self):
         self.store_data.pop('address')
         response = self.client.put(
-            reverse('store-retrieve-update-destroy', kwargs={'pk': self.store.pk}),
+            reverse('store-retrieve-update-destroy',
+                    kwargs={'pk': self.store.pk}),
             data=self.store_data,
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_retrieve_store(self):
-        response = self.client.get(reverse('store-retrieve-update-destroy', kwargs={'pk': self.store.pk}))
+        response = self.client.get(
+            reverse('store-retrieve-update-destroy', kwargs={'pk': self.store.pk}))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], 'Updated Test Store')
 
     def test_delete_store(self):
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
-        response = self.client.delete(reverse('store-retrieve-update-destroy', kwargs={'pk': self.store.pk}))
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.user.auth_token.key)
+        response = self.client.delete(
+            reverse('store-retrieve-update-destroy', kwargs={'pk': self.store.pk}))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)

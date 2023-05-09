@@ -11,10 +11,12 @@ from .views_helper import GeneralFuntions
 from .models import Store
 from .serializer import StoreSerializer
 
+
 class CustomPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 100
+
 
 class StoreListCreateView(generics.ListCreateAPIView):
     queryset = Store.objects.all()
@@ -22,10 +24,19 @@ class StoreListCreateView(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
-    search_fields = ['name', 'address__street', 'address__location', 'address__postcode', 'openingHours__dayOfWeek', 'address__id', 'openingHours__id', 'id']
-    ordering_fields = ['name', 'address__street', 'address__location', 'address__postcode', 'openingHours__dayOfWeek', 'address__id', 'openingHours__id', 'id']
-    filterset_fields = ['name', 'address__street', 'address__location', 'address__postcode', 'openingHours__dayOfWeek', 'address__id', 'openingHours__id', 'id']
+    filter_backends = [filters.SearchFilter,
+                       filters.OrderingFilter, DjangoFilterBackend]
+    search_fields = ['name', 'address__street', 'address__location', 'address__postcode',
+                     'openingHours__dayOfWeek', 'address__id', 'openingHours__id', 'openingHours__openingTime',
+                     'openingHours__closingTime', 'openingHours__isClosed', 'openingHours__isSpecialTime', 'id']
+
+    ordering_fields = ['name', 'address__street', 'address__location', 'address__postcode',
+                       'openingHours__dayOfWeek', 'address__id', 'openingHours__id', 'openingHours__openingTime',
+                       'openingHours__closingTime', 'openingHours__isClosed', 'openingHours__isSpecialTime', 'id']
+
+    filterset_fields = ['name', 'address__street', 'address__location', 'address__postcode',
+                        'openingHours__dayOfWeek', 'address__id', 'openingHours__id', 'openingHours__openingTime',
+                        'openingHours__closingTime', 'openingHours__isClosed', 'openingHours__isSpecialTime', 'id']
 
     def create(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
@@ -34,17 +45,19 @@ class StoreListCreateView(generics.ListCreateAPIView):
             store = serializer.save()
             address_data = request.data.pop('address', None)
             if address_data is not None:
-                address_list = GeneralFuntions.get_address_list_or_error(address_data)
+                address_list = GeneralFuntions.get_address_list_or_error(
+                    address_data)
                 if isinstance(address_list, Response):
                     return address_list
                 store.address.set(address_list)
 
             opening_hours_data = request.data.pop('openingHours', None)
             if opening_hours_data is not None:
-                opening_hours_list = GeneralFuntions.get_opening_hours_list_or_error(opening_hours_data, store.id)
+                opening_hours_list = GeneralFuntions.get_opening_hours_list_or_error(
+                    opening_hours_data)
                 if isinstance(opening_hours_list, Response):
                     return opening_hours_list
-            store.openingHours.set(opening_hours_list)
+                store.openingHours.set(opening_hours_list)
 
             serialized_data = self.get_serializer(store).data
             return Response(serialized_data, status=status.HTTP_201_CREATED)
@@ -85,19 +98,22 @@ class StoreRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
         if serializer.is_valid(raise_exception=True):
             store = serializer.save()
             address_data = request.data.pop('address', None)
             if address_data is not None:
-                address_list = GeneralFuntions.get_address_list_or_error(address_data)
+                address_list = GeneralFuntions.get_address_list_or_error(
+                    address_data)
                 if isinstance(address_list, Response):
                     return address_list
                 store.address.set(address_list)
 
             opening_hours_data = request.data.pop('openingHours', None)
             if opening_hours_data is not None:
-                opening_hours_list = GeneralFuntions.get_opening_hours_list_or_error(opening_hours_data, store.id)
+                opening_hours_list = GeneralFuntions.get_opening_hours_list_or_error(
+                    opening_hours_data)
                 if isinstance(opening_hours_list, Response):
                     return opening_hours_list
                 store.openingHours.set(opening_hours_list)
@@ -141,4 +157,3 @@ class StoreRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     )
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
-

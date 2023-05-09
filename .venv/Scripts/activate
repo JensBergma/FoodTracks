@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="E:\Programmieren\Python\FoodTracks\.venv"
+VIRTUAL_ENV="C:\Studium\python_Task\FoodTracks\.venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
