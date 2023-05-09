@@ -1,5 +1,4 @@
 # FoodTracks
-
 Vorraussetzungen 
 - Python muss auf der Machine installiert sein
 - Beim Eintwickeln und erstellen der Befehle habe ich Windows und Visual Studio Code verwendet
@@ -25,3 +24,5 @@ Als Dokumentation habe ich swagger und redoc eingerichtet.
 	
 Zum Ausführen der Unit-Test
 	-> py manage.py test
+
+Dokumentation: https://docs.google.com/document/d/1BeI8JpqD-71kJMp_olvjc0vb9StBdztEPVbUrpwaE4o/edit?usp=sharing
