@@ -10,10 +10,12 @@ from drf_yasg.utils import swagger_auto_schema
 from StoreAPI.models import OpeningHours
 from StoreAPI.serializer import OpeningHoursSerializer
 
+
 class CustomPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 100
+
 
 class OpeningHoursListCreateView(generics.ListCreateAPIView):
     queryset = OpeningHours.objects.all()
@@ -21,10 +23,14 @@ class OpeningHoursListCreateView(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
-    search_fields = ['dayOfWeek', 'openingTime', 'closingTime', 'isClosed', 'isSpecialTime', 'id']
-    ordering_fields = ['dayOfWeek', 'openingTime', 'closingTime', 'isClosed', 'isSpecialTime', 'id']
-    filterset_fields = ['dayOfWeek', 'openingTime', 'closingTime', 'isClosed', 'isSpecialTime', 'id']
+    filter_backends = [filters.SearchFilter,
+                       filters.OrderingFilter, DjangoFilterBackend]
+    search_fields = ['dayOfWeek', 'openingTime',
+                     'closingTime', 'isClosed', 'isSpecialTime', 'id']
+    ordering_fields = ['dayOfWeek', 'openingTime',
+                       'closingTime', 'isClosed', 'isSpecialTime', 'id']
+    filterset_fields = ['dayOfWeek', 'openingTime',
+                        'closingTime', 'isClosed', 'isSpecialTime', 'id']
 
     @swagger_auto_schema(
         operation_summary="Get a list of opening hours records",
@@ -52,6 +58,7 @@ class OpeningHoursListCreateView(generics.ListCreateAPIView):
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class OpeningHoursRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = OpeningHours.objects.all()

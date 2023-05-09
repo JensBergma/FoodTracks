@@ -9,10 +9,12 @@ from drf_yasg.utils import swagger_auto_schema
 from StoreAPI.models import Address
 from StoreAPI.serializer import AddressSerializer
 
+
 class CustomPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 100
+
 
 class AddressListCreateView(generics.ListCreateAPIView):
     queryset = Address.objects.all()
@@ -20,7 +22,8 @@ class AddressListCreateView(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     pagination_class = CustomPagination
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    filter_backends = [filters.SearchFilter,
+                       filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['street', 'location', 'postcode', 'houseNumber', 'id']
     ordering_fields = ['street', 'location', 'postcode', 'houseNumber', 'id']
     filterset_fields = ['street', 'location', 'postcode', 'houseNumber', 'id']
@@ -48,6 +51,7 @@ class AddressListCreateView(generics.ListCreateAPIView):
     )
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
+
 
 class AddressRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Address.objects.all()

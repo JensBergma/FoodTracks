@@ -46,7 +46,7 @@ class StoreListCreateView(generics.ListCreateAPIView):
             address_data = request.data.pop('address', None)
             if address_data is not None:
                 address_list = GeneralFuntions.get_address_list_or_error(
-                    address_data)
+                    address_data, store.id)
                 if isinstance(address_list, Response):
                     return address_list
                 store.address.set(address_list)
@@ -54,7 +54,7 @@ class StoreListCreateView(generics.ListCreateAPIView):
             opening_hours_data = request.data.pop('openingHours', None)
             if opening_hours_data is not None:
                 opening_hours_list = GeneralFuntions.get_opening_hours_list_or_error(
-                    opening_hours_data)
+                    opening_hours_data, store.id)
                 if isinstance(opening_hours_list, Response):
                     return opening_hours_list
                 store.openingHours.set(opening_hours_list)
@@ -105,7 +105,7 @@ class StoreRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             address_data = request.data.pop('address', None)
             if address_data is not None:
                 address_list = GeneralFuntions.get_address_list_or_error(
-                    address_data)
+                    address_data, store.id)
                 if isinstance(address_list, Response):
                     return address_list
                 store.address.set(address_list)
@@ -113,7 +113,7 @@ class StoreRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             opening_hours_data = request.data.pop('openingHours', None)
             if opening_hours_data is not None:
                 opening_hours_list = GeneralFuntions.get_opening_hours_list_or_error(
-                    opening_hours_data)
+                    opening_hours_data, store.id)
                 if isinstance(opening_hours_list, Response):
                     return opening_hours_list
                 store.openingHours.set(opening_hours_list)
