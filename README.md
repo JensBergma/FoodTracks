@@ -6,7 +6,7 @@ Vorraussetzungen
 Quellcode öffnen
 - Terminal öffnen und sich im Ordner FoodTracks befinden
 - Das Virtuelle Environment auf die aktuellen Pfade setzen
-	-> py -m venv <Pfad von dem Repo>\FoodTracks\\.venv (z. B. C:\Programmieren\Python\FoodTracks\\.venv )
+	-> py -m venv 'Pfad von dem Repo'\FoodTracks\\.venv (z. B. C:\Programmieren\Python\FoodTracks\\.venv )
 - Die Virtuelle Umgebung starten
 	-> .\.venv\Scripts\activate
 		->(Sollte das nicht funktionieren, kann es an der ExecutionPolicy liegen. Hiefür einmal folgendes ausführen -> Set-ExecutionPolicy RemoteSigned -Scope Process)
