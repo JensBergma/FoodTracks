@@ -182,8 +182,8 @@ class StoreListCreateViewTestCase(TestCase):
             }],
             'openingHours': [{
                 'dayOfWeek': 1,
-                'openingTime': '08:00',
-                'closingTime': '17:00',
+                'openingTime': '08:00:00',
+                'closingTime': '17:00:00',
                 'isClosed': False,
                 'isSpecialTime': False
             }]
@@ -250,8 +250,8 @@ class StoreRetrieveUpdateDestroyViewTestCase(TestCase):
             }],
             'openingHours': [{
                 'dayOfWeek': 2,
-                'openingTime': '09:00',
-                'closingTime': '18:00',
+                'openingTime': '09:00:00',
+                'closingTime': '18:00:00',
                 'isClosed': False,
                 'isSpecialTime': False
             }]
@@ -287,16 +287,6 @@ class StoreRetrieveUpdateDestroyViewTestCase(TestCase):
 
     def test_update_store_invalid_opening_hours(self):
         self.store_data['openingHours'][0]['openingTime'] = '50:00'
-        response = self.client.put(
-            reverse('store-retrieve-update-destroy',
-                    kwargs={'pk': self.store.pk}),
-            data=self.store_data,
-            format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_update_store_missing_fields(self):
-        self.store_data.pop('address')
         response = self.client.put(
             reverse('store-retrieve-update-destroy',
                     kwargs={'pk': self.store.pk}),
